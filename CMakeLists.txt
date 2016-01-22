@@ -4,12 +4,12 @@ project(RenameMe)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-find_package(LibRaw REQUIRED)
+find_package(Exiv2 REQUIRED)
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 
-include_directories(${LibRaw_INCLUDE_DIRS})
+include_directories(${EXIV2_INCLUDE_DIRS})
 
-set(LIBS ${LIBS} ${LibRaw_LIBRARIES})
+set(LIBS ${LIBS} ${EXIV2_LIBRARY})
 
 set(${PROJECT_NAME}_CPP
 	src/main.cpp

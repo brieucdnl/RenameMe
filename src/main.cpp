@@ -4,8 +4,8 @@
 // Boost
 #include <boost/filesystem.hpp>
 
-// LibRaw
-#include "libraw/libraw.h"
+// Exiv2
+#include <exiv2/exiv2.hpp>
 
 bool compare(const std::pair<boost::filesystem::path, time_t> &i, const std::pair<boost::filesystem::path, time_t> &j)
 {
@@ -14,18 +14,18 @@ bool compare(const std::pair<boost::filesystem::path, time_t> &i, const std::pai
 
 int main(int agc, char * argv[])
 {
-	LibRaw rawProcessor;
 	boost::filesystem::path p(argv[1]);
-	time_t timestamp;
+	int iteration = 0;				
 	// START TRACKING
-	clock_t startInit, endInit, startExif, endExif, startSort, endSort;
+	clock_t start, end, startInit, endInit, startExif, endExif, startSort, endSort;
 	double diffExif, diffSort;
 	// END TRACKING
-
+	start = clock();
 	if(exists(p))
 	{
 		if(is_directory(p))
 		{
+			struct tm t;
 			std::vector<std::pair<boost::filesystem::path, time_t> > v;
 	
 			// init temporary
@@ -37,29 +37,42 @@ int main(int agc, char * argv[])
 			startExif = clock();
 			for(std::vector<boost::filesystem::path>::const_iterator it(v_tmp.begin()); it != v_tmp.end(); it++)
 			{
-				std::pair<boost::filesystem::path, time_t> file;
-				if(rawProcessor.open_file((*it).c_str()) == LIBRAW_SUCCESS)
+				if(!is_directory(*it))	
 				{
-					rawProcessor.unpack();
-					timestamp = rawProcessor.imgdata.other.timestamp;
-					file = std::make_pair(*it, timestamp);
-					v.push_back(file);
-				}	
+					std::pair<boost::filesystem::path, time_t> file;
+					Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open((*it).c_str());
+					if(image.get() != 0)
+					{
+						image->readMetadata();
+						std::string str;
+						time_t timestamp;
+						Exiv2::ExifData &exifData = image->exifData();
+						if(!exifData.empty())
+						{
+							str = exifData["Exif.Photo.DateTimeOriginal"].toString();
+							strptime(str.c_str(), "%Y:%m:%d %H:%M:%S", &t);
+							timestamp = mktime(&t);
+							file = std::make_pair(*it, timestamp);
+							v.push_back(file);
+						}
+					}
+				}
 			}
 			endExif = clock();
+			//std::cout << ctime(&timestamp);
 			// sorting by timestamp (descending order)
 			startSort = clock();
 			std::sort(v.begin(), v.end(), compare);
-			endSort = clock();
+			endSort = clock();	
+
+			std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator it2(v.begin());
+			std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator itFin(v.end());
+			iteration = itFin - it2;
 
 			// OUTPUT TRACKING
 			std::cout << "Time Execution 'Init': " << (double)(endInit - startInit)/CLOCKS_PER_SEC << "sec" << std::endl; 
 			std::cout << "Time Execution 'Exif': " << (double)(endExif - startExif)/CLOCKS_PER_SEC << "sec" << std::endl;
 			std::cout << "Time Execution 'Sort': " << (double)(endSort - startSort)/CLOCKS_PER_SEC << "sec" << std::endl;
-			for(std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator it2(v.begin()); it2 != v.end(); it2++)
-			{
-				std::cout << (*it2).first.c_str() << " - Timestamp : " << ctime(&((*it2).second));
-			}
 		}
 		else
 		{
@@ -70,5 +83,6 @@ int main(int agc, char * argv[])
 	{
 		std::cout << "Path doesn't exist !" << std::endl;
 	}
-	rawProcessor.recycle();
+	end = clock();
+	std::cout << "Total Time Execution: " << (double)(end - start)/CLOCKS_PER_SEC << "sec - Number of files processed: " << iteration << std::endl;
 }
