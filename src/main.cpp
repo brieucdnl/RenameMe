@@ -1,5 +1,6 @@
 // STL
 #include <iostream>
+#include <regex>
 
 // Boost
 #include <boost/filesystem.hpp>
@@ -15,7 +16,7 @@ bool compare(const std::pair<boost::filesystem::path, time_t> &i, const std::pai
 int main(int agc, char * argv[])
 {
 	boost::filesystem::path p(argv[1]);
-	int iteration = 0;				
+	int iComp(0), iRaw(0);				
 	// START TRACKING
 	clock_t start, end, startInit, endInit, startExif, endExif, startSort, endSort;
 	double diffExif, diffSort;
@@ -63,11 +64,30 @@ int main(int agc, char * argv[])
 			// sorting by timestamp (descending order)
 			startSort = clock();
 			std::sort(v.begin(), v.end(), compare);
-			endSort = clock();	
-
-			std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator it2(v.begin());
-			std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator itFin(v.end());
-			iteration = itFin - it2;
+			endSort = clock();		
+			
+			for(std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator it2(v.begin()); it2 != v.end(); it2++)
+			{
+				std::regex r("(.*\\/)(.*)(\\..{3})");
+				std::smatch match;
+				std::string s((*it2).first.string());
+				if(std::regex_search(s, match, r))
+				{
+					std::stringstream ss;
+					std::regex re("(.jpg|.png|.bmp)");
+					std::string prefix;
+					if(std::regex_search(s, re))
+					{
+						ss <<  match[1] << "COMP_" << std::to_string(++iComp) << match[3];
+					}
+					else
+					{
+						ss <<  match[1] << "RAW_" << std::to_string(++iRaw) << match[3];
+					}
+					std::string result(ss.str()); 
+					std::cout << result << std::endl;	
+				}
+			}
 
 			// OUTPUT TRACKING
 			std::cout << "Time Execution 'Init': " << (double)(endInit - startInit)/CLOCKS_PER_SEC << "sec" << std::endl; 
@@ -81,8 +101,8 @@ int main(int agc, char * argv[])
 	}
 	else
 	{
-		std::cout << "Path doesn't exist !" << std::endl;
+		std::cout << "Error: Path doesn't exist !" << std::endl;
 	}
 	end = clock();
-	std::cout << "Total Time Execution: " << (double)(end - start)/CLOCKS_PER_SEC << "sec - Number of files processed: " << iteration << std::endl;
+	std::cout << "Total Time Execution: " << (double)(end - start)/CLOCKS_PER_SEC << "sec - Number of files processed: " << iComp + iRaw << std::endl;
 }
