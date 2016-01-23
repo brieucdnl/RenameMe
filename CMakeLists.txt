@@ -4,19 +4,24 @@ project(RenameMe)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_AUTOMOC ON)
+
+find_package(Qt5Widgets REQUIRED)
 
 find_package(Exiv2 REQUIRED)
 find_package(Boost COMPONENTS system filesystem REQUIRED)
 
-include_directories(${EXIV2_INCLUDE_DIRS})
+include_directories(${EXIV2_INCLUDE_DIRS} ${Qt5Widgets_INCLUDE_DIRS})
 
 set(LIBS ${LIBS} ${EXIV2_LIBRARY})
 
 set(${PROJECT_NAME}_CPP
 	src/main.cpp
+	src/RenameMeWindow.cpp
 )
 
 set(${PROJECT_NAME}_H
+	src/RenameMeWindow.h
 )
 
 add_executable(
@@ -30,4 +35,5 @@ target_link_libraries(
 	${LIBS}
 	${Boost_FILESYSTEM_LIBRARY}
 	${Boost_SYSTEM_LIBRARY}
+	${Qt5Widgets_LIBRARIES}
 )
