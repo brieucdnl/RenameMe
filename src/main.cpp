@@ -55,12 +55,12 @@ int main(int agc, char * argv[])
 							timestamp = mktime(&t);
 							file = std::make_pair(*it, timestamp);
 							v.push_back(file);
+							std::cout << (*it).c_str()  << " - " << ctime(&timestamp);
 						}
 					}
 				}
 			}
 			endExif = clock();
-			//std::cout << ctime(&timestamp);
 			// sorting by timestamp (descending order)
 			startSort = clock();
 			std::sort(v.begin(), v.end(), compare);
@@ -86,6 +86,7 @@ int main(int agc, char * argv[])
 					}
 					std::string result(ss.str()); 
 					std::cout << result << std::endl;	
+					std::rename(s.c_str(), result.c_str());
 				}
 			}
 
