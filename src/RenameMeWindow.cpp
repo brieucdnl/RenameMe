@@ -62,7 +62,21 @@ void RenameMeWindow::open()
 
 void RenameMeWindow::run()
 {
-	int result = QMessageBox::warning(this, "Warning: This is non-reversible", "<p align='center'>This action can't be undone. Are you sure, you want to rename all these files ?</p>", QMessageBox::Yes | QMessageBox::No);
+	// Pre-loading Datas
+	std::vector<std::pair<boost::filesystem::path, time_t> > vecTmp;
+	for(int i = 0; i < m_vec.size(); i++)
+	{
+		if(m_table->item(i, 2)->checkState() == Qt::Checked)
+		{
+			vecTmp.push_back(m_vec[i]);
+		}
+	}
+	std::stringstream ss;
+	ss << "<p align='center'>This action can't be undone. Are you sure, you want to rename " << vecTmp.size() << " files ?</p>";
+	QString qStr = QString::fromStdString(ss.str());
+
+	// Warning message
+	int result = QMessageBox::warning(this, "Warning: This is non-reversible", qStr, QMessageBox::Yes | QMessageBox::No);
 	if(result == QMessageBox::Yes)
 	{
 
