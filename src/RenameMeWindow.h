@@ -3,6 +3,7 @@
 
 #include <QtWidgets>
 #include <iostream>
+#include "RenameMePhotos.h"
 
 class RenameMeWindow : public QMainWindow
 {
@@ -18,7 +19,8 @@ class RenameMeWindow : public QMainWindow
         void run();
 
     private:
-        QPlainTextEdit *m_textEdit;
+        QTableWidget *m_table;
+        QStringList m_tabHeader;
 
         QString m_currentDir;
 
