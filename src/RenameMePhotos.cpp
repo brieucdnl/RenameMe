@@ -2,7 +2,6 @@
 
 RenameMePhotos::RenameMePhotos()
 {
-	std::vector<std::pair<boost::filesystem::path, time_t> > m_vec;
 	int m_comp(0);
 	int m_raw(0);
 }
@@ -11,12 +10,7 @@ RenameMePhotos::~RenameMePhotos()
 {
 }
 
-std::vector<std::pair<boost::filesystem::path, time_t> > RenameMePhotos::getPhotos()
-{
-	return m_vec;
-}
-
-int RenameMePhotos::openDirectory(std::string p, bool recursive)
+int RenameMePhotos::openDirectory(std::string p, std::vector<std::pair<boost::filesystem::path, time_t> > &vec, bool recursive)
 {
 	// Var Declaration
 	struct tm t;
@@ -58,7 +52,7 @@ int RenameMePhotos::openDirectory(std::string p, bool recursive)
 							strptime(strTmp.c_str(), "%Y:%m:%d %H:%M:%S", &t);
 							timestamp = mktime(&t);
 							file = std::make_pair(*it, timestamp);
-							m_vec.push_back(file);
+							vec.push_back(file);
 						}
 						else
 						{
