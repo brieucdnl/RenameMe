@@ -28,17 +28,16 @@ RenameMeWindow::~RenameMeWindow()
 // SLOTS
 void RenameMeWindow::open()
 {
-	//m_currentDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "/home", QFileDialog::ShowDirsOnly);
-	RenameMePhotos photos;
+	m_currentDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "/home", QFileDialog::ShowDirsOnly);
 	int i = 0;
-	m_currentDir = "/home/brieuc/Images/Samples/";
+	//m_currentDir = "/home/brieuc/Images/Samples/";
 	if(m_currentDir != NULL)
 	{
 		m_runAct->setEnabled(true);
 		m_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 		m_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
 		m_table->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
-		photos.openDirectory(m_currentDir.toStdString(), m_vec, true);
+		RenameMePhotos::openDirectory(m_currentDir.toStdString(), m_vec, true);
 	
 		for(std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator it(m_vec.begin()); it != m_vec.end(); it++)
 		{

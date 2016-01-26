@@ -1,15 +1,5 @@
 #include "RenameMePhotos.h"
 
-RenameMePhotos::RenameMePhotos()
-{
-	int m_comp(0);
-	int m_raw(0);
-}
-
-RenameMePhotos::~RenameMePhotos()
-{
-}
-
 int RenameMePhotos::openDirectory(std::string p, std::vector<std::pair<boost::filesystem::path, time_t> > &vec, bool recursive)
 {
 	// Var Declaration

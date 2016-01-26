@@ -16,10 +16,7 @@ class RenameMePhotos
 	public:
 		RenameMePhotos();
 		~RenameMePhotos();
-		int openDirectory(std::string path, std::vector<std::pair<boost::filesystem::path, time_t> > &vec, bool recursive = false);		
-	
-	private:
-		int m_comp;
-		int m_raw;
+		static int openDirectory(std::string path, std::vector<std::pair<boost::filesystem::path, time_t> > &vec, bool recursive = false);
+		static int sortAndRename(std::vector<std::pair<boost::filesystem::path, time_t> > &vec);	
 };
 #endif
