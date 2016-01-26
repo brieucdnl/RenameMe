@@ -30,7 +30,6 @@ void RenameMeWindow::open()
 {
 	m_currentDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "/home", QFileDialog::ShowDirsOnly);
 	int i = 0;
-	//m_currentDir = "/home/brieuc/Images/Samples/";
 	if(m_currentDir != NULL)
 	{
 		m_runAct->setEnabled(true);
@@ -78,7 +77,8 @@ void RenameMeWindow::run()
 	int result = QMessageBox::warning(this, "Warning: This is non-reversible", qStr, QMessageBox::Yes | QMessageBox::No);
 	if(result == QMessageBox::Yes)
 	{
-
+		RenameMePhotos::sortAndRename(vecTmp, "Image", 0);
+		m_runAct->setEnabled(false);
 	}
 	else if(result == QMessageBox::No)
 	{
