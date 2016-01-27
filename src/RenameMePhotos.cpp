@@ -108,7 +108,14 @@ int RenameMePhotos::sortAndRename(std::vector<std::pair<boost::filesystem::path,
 			ss << match[1] << match[2] << "_tmp" << match[3];
 			ss2 << match[1] << prefix << "_" << std::to_string(iCount++) << match[3];	
 		}
-		std::rename(ss.str().c_str(), ss2.str().c_str());
+		if(!exists(boost::filesystem::path(ss2.str().c_str())))
+		{
+			std::rename(ss.str().c_str(), ss2.str().c_str());
+		}
+		else
+		{
+			std::cout << "Error file " << ss.str().c_str() << " can't be rename " << ss2.str().c_str() << std::endl;
+		}
 	}
 }
 
