@@ -15,7 +15,8 @@ class RenameMePhotos
 {
 	public:
 		static int openDirectory(std::string path, std::vector<std::pair<boost::filesystem::path, time_t> > &vec, bool recursive = false, bool clear = true);
-		static int sortAndRename(std::vector<std::pair<boost::filesystem::path, time_t> > &vec, std::string prefix = "", int sufixStart = 0);	
+		static int sortAndRename(std::vector<std::pair<boost::filesystem::path, time_t> > &vec, std::string prefix = "", int suffixStart = 1);
+		static bool checkConflict(std::vector<std::pair<boost::filesystem::path, time_t> > &vec, std::vector<std::pair<boost::filesystem::path, time_t> > &vecError, std::string prefix = "", int suffixStart = 1);
 	
 	private:
 		static bool compare(const std::pair<boost::filesystem::path, time_t> &i, const std::pair<boost::filesystem::path, time_t> &j);

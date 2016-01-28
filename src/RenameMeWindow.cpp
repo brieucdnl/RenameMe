@@ -43,33 +43,52 @@ void RenameMeWindow::open()
 
 void RenameMeWindow::run()
 {
+	bool run = true;
 	// Pre-loading Datas
-	std::vector<std::pair<boost::filesystem::path, time_t> > vecTmp;
+	std::vector<std::pair<boost::filesystem::path, time_t> > vecTmp, vecNotChecked, vecError;
 	for(int i = 0; i < m_vec.size(); i++)
 	{
 		if(m_table->item(i, 2)->checkState() == Qt::Checked)
 		{
 			vecTmp.push_back(m_vec[i]);
 		}
+		else
+		{
+			vecNotChecked.push_back(m_vec[i]);
+		}
 	}
-	std::stringstream ss;
-	ss << "<p align='center'>This action can't be undone. Are you sure, you want to rename " << vecTmp.size() << " files ?</p>";
-	// Display a warning message
-	int result = QMessageBox(QMessageBox::Warning, "Warning !", QString::fromStdString(ss.str()), QMessageBox::Yes | QMessageBox::No).exec();
-	if(result == QMessageBox::Yes)
+	
+	if(!vecNotChecked.empty())
 	{
-		RenameMePhotos::sortAndRename(vecTmp, "Image", 0);		
-		m_runAct->setEnabled(false);
-		m_updateAct->setEnabled(true);	
-		// Display a success message
-		std::stringstream ss2;
-		ss2 << vecTmp.size() << " files renamed successfully !";
-		QMessageBox(QMessageBox::Information, "Success !", QString::fromStdString(ss2.str())).exec();
+		if(RenameMePhotos::checkConflict(vecNotChecked, vecError, "Image", 1))
+		{
+			std::stringstream ss;
+			ss << vecError.size() << " files in conflict ! We can resolve these conflicts by adding conflicted files to the process, would you go for it ?";
+			int result  = QMessageBox(QMessageBox::Critical, "Error !", QString::fromStdString(ss.str()), QMessageBox::Yes | QMessageBox::No).exec();	
+			run = (result == QMessageBox::Yes);
+		}
 	}
-	else if(result == QMessageBox::No)
+	if(run)
 	{
-		// Display an abort message
-		QMessageBox(QMessageBox::Information, "Abort !", "The abort was successfully executed !").exec();
+		std::stringstream ss;
+		ss << "<p align='center'>This action can't be undone. Are you sure, you want to rename " << vecTmp.size() << " files ?</p>";
+		// Display a warning message
+		int result = QMessageBox(QMessageBox::Warning, "Warning !", QString::fromStdString(ss.str()), QMessageBox::Yes | QMessageBox::No).exec();
+		if(result == QMessageBox::Yes)
+		{
+			RenameMePhotos::sortAndRename(vecTmp, "Image", 1);		
+			m_runAct->setEnabled(false);
+			m_updateAct->setEnabled(true);	
+			// Display a success message
+			std::stringstream ss2;
+			ss2 << vecTmp.size() << " files renamed successfully !";
+			QMessageBox(QMessageBox::Information, "Success !", QString::fromStdString(ss2.str())).exec();
+		}
+		else if(result == QMessageBox::No)
+		{
+			// Display an abort message
+			QMessageBox(QMessageBox::Information, "Abort !", "The abort was successfully executed !").exec();
+		}
 	}
 }
 
