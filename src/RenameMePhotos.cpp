@@ -5,26 +5,6 @@ bool RenameMePhotos::compare(const std::pair<boost::filesystem::path, time_t> &i
 	return i.second < j.second;
 }
 
-bool RenameMePhotos::checkConflict(std::vector<std::pair<boost::filesystem::path, time_t> > &vec, std::vector<std::pair<boost::filesystem::path, time_t> > &vecError, std::string prefix, int suffixStart)
-{
-	std::vector<std::pair<boost::filesystem::path, time_t> > vecDel;
-	for(std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator it(vec.begin()); it!=vec.end(); it++)
-	{
-		for(int i = suffixStart; i <= vec.size(); i++)
-		{
-			std::stringstream ss;
-			ss << "(.*\\/)*(" << prefix << "_" << i << ")(\\..{3,4})";
-			std::regex reg(ss.str());
-			std::string strVec((*it).first.string());
-			if(std::regex_match(strVec, reg))
-			{
-				vecError.push_back(*it);
-			}
-		}
-	}
-	return (vecError.size() > 0);
-}
-
 int RenameMePhotos::openDirectory(std::string p, std::vector<std::pair<boost::filesystem::path, time_t> > &vec, bool recursive, bool clear)
 {
 	if(clear)
@@ -124,4 +104,28 @@ int RenameMePhotos::sortAndRename(std::vector<std::pair<boost::filesystem::path,
 		}
 		std::rename(ss.str().c_str(), ss2.str().c_str());
 	}
+}
+
+bool RenameMePhotos::checkConflict(std::vector<std::pair<boost::filesystem::path, time_t> > &vec, std::vector<std::pair<boost::filesystem::path, time_t> > &vecError,  int size, std::string prefix, int suffixStart)
+{
+	for(std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator it(vec.begin()); it!=vec.end(); it++)
+	{ 
+		for(int i = suffixStart; i <= vec.size(); i++)
+		{
+			std::stringstream ss;
+			ss << "(.*\\/)*(" << prefix << "_" << i << ")(\\..{3,4})";
+			std::regex reg(ss.str());
+			std::string strVec((*it).first.string());
+			if(std::regex_match(strVec, reg))
+			{
+				vecError.push_back(*it);
+			}
+		}
+	}
+	return (vecError.size() > 0);
+}
+
+void RenameMePhotos::solveConflict(std::vector<std::pair<boost::filesystem::path, time_t> > &vec, std::vector<std::pair<boost::filesystem::path, time_t> > &vecError)
+{
+	vec.insert(vec.end(), vecError.begin(), vecError.end());
 }

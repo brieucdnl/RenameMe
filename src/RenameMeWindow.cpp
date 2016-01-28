@@ -60,12 +60,17 @@ void RenameMeWindow::run()
 	
 	if(!vecNotChecked.empty())
 	{
-		if(RenameMePhotos::checkConflict(vecNotChecked, vecError, "Image", 1))
+		if(RenameMePhotos::checkConflict(vecNotChecked, vecError, m_vec.size() - vecTmp.size(), "Image", 1))
 		{
 			std::stringstream ss;
 			ss << vecError.size() << " files in conflict ! We can resolve these conflicts by adding conflicted files to the process, would you go for it ?";
 			int result  = QMessageBox(QMessageBox::Critical, "Error !", QString::fromStdString(ss.str()), QMessageBox::Yes | QMessageBox::No).exec();	
 			run = (result == QMessageBox::Yes);
+			if(run)
+			{
+				RenameMePhotos::solveConflict(vecTmp, vecError);
+				vecError.clear();	
+			}
 		}
 	}
 	if(run)
@@ -138,6 +143,7 @@ void RenameMeWindow::loadTable()
 		// CheckBox
 		QTableWidgetItem *item3 = new QTableWidgetItem();
 		item3->setCheckState(Qt::Checked);
+
 		m_table->setItem(i, 0, new QTableWidgetItem(vPath));
 		m_table->setItem(i, 1, new QTableWidgetItem(vDate));
 		m_table->setItem(i, 2, item3);
