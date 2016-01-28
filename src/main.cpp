@@ -3,15 +3,15 @@
 #include <QPushButton>
 
 // Project
-#include "RenameMeWindow.h"
+#include "RenameMeMainWindow.h"
 
 int main(int argc, char** argv)
 {
 	QApplication app(argc, argv);
 
 	// Create a window
-        RenameMeWindow mainWindow;
-        mainWindow.show();
+  	RenameMeMainWindow mainWindow;
+    mainWindow.show();
 
 	// Display the window
 	return app.exec();

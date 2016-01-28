@@ -1,17 +1,17 @@
-#ifndef DEF_RENAMEMEWINDOW
-#define DEF_RENAMEMEWINDOW
+#ifndef DEF_RENAMEMEMAINWINDOW
+#define DEF_RENAMEMEMAINWINDOW
 
 #include <QtWidgets>
 #include <iostream>
 #include "RenameMePhotos.h"
 
-class RenameMeWindow : public QMainWindow
+class RenameMeMainWindow : public QMainWindow
 {
 	Q_OBJECT
 
 	public:
-		RenameMeWindow();
-		~RenameMeWindow();
+		RenameMeMainWindow();
+		~RenameMeMainWindow();
 		void createMenu();
 		void loadTable();
 
@@ -31,6 +31,7 @@ class RenameMeWindow : public QMainWindow
 		QAction *m_openAct;
 		QAction *m_runAct;
 		QAction *m_updateAct;
+		QAction *m_settingsAct;
 };
 
 #endif

@@ -1,6 +1,6 @@
-#include "RenameMeWindow.h"
+#include "RenameMeMainWindow.h"
 
-RenameMeWindow::RenameMeWindow() : QMainWindow()
+RenameMeMainWindow::RenameMeMainWindow() : QMainWindow()
 {
 	std::vector<std::pair<boost::filesystem::path, time_t> > m_vec;	
 	  
@@ -18,15 +18,18 @@ RenameMeWindow::RenameMeWindow() : QMainWindow()
 	setCentralWidget(m_table);
 }
 
-RenameMeWindow::~RenameMeWindow()
+RenameMeMainWindow::~RenameMeMainWindow()
 {
 	delete m_toolBar;
 	delete m_openAct;
+	delete m_runAct;
+	delete m_updateAct;
+	delete m_settingsAct;
 	delete m_table;
 }
 
 // SLOTS
-void RenameMeWindow::open()
+void RenameMeMainWindow::open()
 {
 	m_table->setRowCount(0);
 	m_currentDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "/home", QFileDialog::ShowDirsOnly);
@@ -41,7 +44,7 @@ void RenameMeWindow::open()
 	}
 }
 
-void RenameMeWindow::run()
+void RenameMeMainWindow::run()
 {
 	bool run = true;
 	// Pre-loading Datas
@@ -97,7 +100,7 @@ void RenameMeWindow::run()
 	}
 }
 
-void RenameMeWindow::update()
+void RenameMeMainWindow::update()
 {
 	RenameMePhotos::openDirectory(m_currentDir.toStdString(), m_vec, true);
 	loadTable();
@@ -106,7 +109,7 @@ void RenameMeWindow::update()
 
 
 // METHODS
-void RenameMeWindow::createMenu()
+void RenameMeMainWindow::createMenu()
 {
 	m_toolBar = addToolBar(tr("File"));
 	m_toolBar->setMovable(false);
@@ -117,17 +120,20 @@ void RenameMeWindow::createMenu()
 	m_runAct->setEnabled(false);
 	m_updateAct = new QAction(QIcon("../images/update.png"), tr("&Update directory"), this);
 	m_updateAct->setEnabled(false);
+	m_settingsAct = new QAction(QIcon("../images/settings.png"), tr("&Change Settings"), this);
 
 	m_toolBar->addAction(m_openAct);
 	m_toolBar->addAction(m_runAct);
 	m_toolBar->addAction(m_updateAct);
+	m_toolBar->addAction(m_settingsAct);
 
 	connect(m_openAct, SIGNAL(triggered()), this, SLOT(open()));
 	connect(m_runAct, SIGNAL(triggered()), this, SLOT(run()));
 	connect(m_updateAct, SIGNAL(triggered()), this, SLOT(update()));
+	connect(m_settingsAct, SIGNAL(triggered()), this, SLOT());
 }
 
-void RenameMeWindow::loadTable()
+void RenameMeMainWindow::loadTable()
 {
 	int i = 0;
 	m_table->setRowCount(0); // Reinit NbRow in table

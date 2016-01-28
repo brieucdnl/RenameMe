@@ -17,12 +17,12 @@ set(LIBS ${LIBS} ${EXIV2_LIBRARY})
 
 set(${PROJECT_NAME}_CPP
 	src/main.cpp
-	src/RenameMeWindow.cpp
+	src/RenameMeMainWindow.cpp
 	src/RenameMePhotos.cpp
 )
 
 set(${PROJECT_NAME}_H
-	src/RenameMeWindow.h
+	src/RenameMeMainWindow.h
 	src/RenameMePhotos.h
 )
 
