@@ -7,7 +7,6 @@ RenameMeMainWindow::RenameMeMainWindow() : QMainWindow()
 	this->resize(QSize(600,450));
 
   createMenu();
-
   m_table = new QTableWidget(0, 3, this);
   m_tabHeader << "Path" << "Date" << "";
   m_table->setHorizontalHeaderLabels(m_tabHeader);
@@ -20,13 +19,14 @@ RenameMeMainWindow::RenameMeMainWindow() : QMainWindow()
 
 RenameMeMainWindow::~RenameMeMainWindow()
 {
-	delete m_toolBar;
 	delete m_openAct;
 	delete m_runAct;
 	delete m_updateAct;
 	delete m_settingsAct;
 	delete m_table;
+	delete m_toolBar;
 }
+
 
 // SLOTS
 void RenameMeMainWindow::open()
@@ -39,7 +39,7 @@ void RenameMeMainWindow::open()
 		m_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 		m_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
 		m_table->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
-		RenameMePhotos::openDirectory(m_currentDir.toStdString(), m_vec, true);
+		RenameMePhotos::openDirectory(m_currentDir.toStdString(), m_vec, true, true);
 		loadTable();	
 	}
 }
@@ -49,7 +49,7 @@ void RenameMeMainWindow::run()
 	bool run = true;
 	// Pre-loading Datas
 	std::vector<std::pair<boost::filesystem::path, time_t> > vecTmp, vecNotChecked, vecError;
-	for(int i = 0; i < m_vec.size(); i++)
+	for(unsigned int i = 0; i < m_vec.size(); i++)
 	{
 		if(m_table->item(i, 2)->checkState() == Qt::Checked)
 		{
@@ -107,6 +107,11 @@ void RenameMeMainWindow::update()
 	m_runAct->setEnabled(true);
 }
 
+void RenameMeMainWindow::settings()
+{
+	RenameMeSettingsWindow settingsWindow(this);
+	settingsWindow.exec();
+}
 
 // METHODS
 void RenameMeMainWindow::createMenu()
@@ -115,12 +120,12 @@ void RenameMeMainWindow::createMenu()
 	m_toolBar->setMovable(false);
 	m_toolBar->setFloatable(false);
 
-	m_openAct = new QAction(QIcon("../images/open.png"), tr("&Open a directory"), this);
-	m_runAct = new QAction(QIcon("../images/run.png"), tr("&Rename files"), this);
+	m_openAct = new QAction(QIcon("../../images/open.png"), tr("&Open a directory"), this);
+	m_runAct = new QAction(QIcon("../../images/run.png"), tr("&Rename files"), this);
 	m_runAct->setEnabled(false);
-	m_updateAct = new QAction(QIcon("../images/update.png"), tr("&Update directory"), this);
+	m_updateAct = new QAction(QIcon("../../images/update.png"), tr("&Update directory"), this);
 	m_updateAct->setEnabled(false);
-	m_settingsAct = new QAction(QIcon("../images/settings.png"), tr("&Change Settings"), this);
+	m_settingsAct = new QAction(QIcon("../../images/settings.png"), tr("&Change Settings"), this);
 
 	m_toolBar->addAction(m_openAct);
 	m_toolBar->addAction(m_runAct);
@@ -130,7 +135,7 @@ void RenameMeMainWindow::createMenu()
 	connect(m_openAct, SIGNAL(triggered()), this, SLOT(open()));
 	connect(m_runAct, SIGNAL(triggered()), this, SLOT(run()));
 	connect(m_updateAct, SIGNAL(triggered()), this, SLOT(update()));
-	connect(m_settingsAct, SIGNAL(triggered()), this, SLOT());
+	connect(m_settingsAct, SIGNAL(triggered()), this, SLOT(settings()));
 }
 
 void RenameMeMainWindow::loadTable()

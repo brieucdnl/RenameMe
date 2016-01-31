@@ -4,6 +4,8 @@ project(RenameMe)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -wall")
 set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5Widgets REQUIRED)
@@ -18,11 +20,13 @@ set(LIBS ${LIBS} ${EXIV2_LIBRARY})
 set(${PROJECT_NAME}_CPP
 	src/main.cpp
 	src/RenameMeMainWindow.cpp
+	src/RenameMeSettingsWindow.cpp
 	src/RenameMePhotos.cpp
 )
 
 set(${PROJECT_NAME}_H
 	src/RenameMeMainWindow.h
+	src/RenameMeSettingsWindow.h
 	src/RenameMePhotos.h
 )
 

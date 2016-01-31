@@ -49,6 +49,7 @@ int RenameMePhotos::openDirectory(std::string p, std::vector<std::pair<boost::fi
 						{
 							strTmp = exifData["Exif.Photo.DateTimeOriginal"].toString();
 							strptime(strTmp.c_str(), "%Y:%m:%d %H:%M:%S", &t);
+							t.tm_isdst = -1;
 							timestamp = mktime(&t);
 							file = std::make_pair(*it, timestamp);
 							vec.push_back(file);
@@ -70,6 +71,7 @@ int RenameMePhotos::openDirectory(std::string p, std::vector<std::pair<boost::fi
 	{
 		// Error 1: There is no such path
 	}
+	return 1;
 }
 
 int RenameMePhotos::sortAndRename(std::vector<std::pair<boost::filesystem::path, time_t> > &vec, std::string prefix, int suffixStart)
@@ -104,13 +106,14 @@ int RenameMePhotos::sortAndRename(std::vector<std::pair<boost::filesystem::path,
 		}
 		std::rename(ss.str().c_str(), ss2.str().c_str());
 	}
+	return 1;
 }
 
 bool RenameMePhotos::checkConflict(std::vector<std::pair<boost::filesystem::path, time_t> > &vec, std::vector<std::pair<boost::filesystem::path, time_t> > &vecError,  int size, std::string prefix, int suffixStart)
 {
 	for(std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator it(vec.begin()); it!=vec.end(); it++)
 	{ 
-		for(int i = suffixStart; i <= vec.size(); i++)
+		for(unsigned int i = suffixStart; i <= vec.size(); i++)
 		{
 			std::stringstream ss;
 			ss << "(.*\\/)*(" << prefix << "_" << i << ")(\\..{3,4})";
