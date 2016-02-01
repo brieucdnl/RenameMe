@@ -26,6 +26,7 @@ RenameMeMainWindow::~RenameMeMainWindow()
 	delete m_settingsAct;
 	delete m_table;
 	delete m_toolBar;
+	delete m_settings;
 }
 
 
@@ -40,7 +41,7 @@ void RenameMeMainWindow::open()
 		m_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 		m_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
 		m_table->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
-		RenameMePhotos::openDirectory(m_currentDir.toStdString(), m_vec, true, true);
+		RenameMePhotos::openDirectory(m_currentDir.toStdString(), m_vec, m_settings->strToBool(m_settings->getDatas("Recursive")), true);
 		loadTable();	
 	}
 }

@@ -46,3 +46,11 @@ std::string RenameMeSettings::getDatas(std::string key)
 {
 	return m_mapSettings[key];
 }
+
+bool RenameMeSettings::strToBool(std::string str)
+{
+	bool b;
+	std::istringstream is(str);
+	is >> std::boolalpha >> b;
+	return b;
+}

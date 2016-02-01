@@ -10,6 +10,7 @@ class RenameMeSettings
 		~RenameMeSettings();
 		bool readDatas();
 		std::string getDatas(std::string key);
+		bool strToBool(std::string str);
 
 	private:	
 		std::string m_configFile;
