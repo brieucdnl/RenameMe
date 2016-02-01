@@ -1,11 +1,9 @@
 #include "RenameMeSettingsWindow.h"
-#include <iostream>
 
 RenameMeSettingsWindow::RenameMeSettingsWindow(QWidget *parent) : QDialog(parent)
 {
 	// Initializing datas
-	m_settings = new RenameMeSettings("/home/brieuc/Documents/RenameMe/build/debug/config.txt");
-	m_settings->readDatas();
+	this->setMinimumWidth(500);
 	m_mainLayout = new QVBoxLayout;
 	// Creating GroupBoxes
 	createPathBox();
@@ -16,22 +14,32 @@ RenameMeSettingsWindow::RenameMeSettingsWindow(QWidget *parent) : QDialog(parent
 
 RenameMeSettingsWindow::~RenameMeSettingsWindow()
 {
-	delete m_settings;
 	delete m_pathLabel;
 	delete m_pathEdit;
+	delete m_pathButton;
+	delete m_recursiveCheckBox;
+	delete m_recursiveLayout;
 	delete m_pathLayout;
+	delete m_openLayout;
 	delete m_pathBox;	
+	delete m_mainLayout;
 }
 
 void RenameMeSettingsWindow::createPathBox()
 {
-	m_pathBox = new QGroupBox(tr("Default Path"));
+	m_pathBox = new QGroupBox(tr("Directory Settings"));
+	m_openLayout = new QVBoxLayout;
 	m_pathLayout = new QHBoxLayout;
-	m_pathLabel = new QLabel(tr("Default Path"));
-	m_pathEdit = new QLineEdit(QString(m_settings->getDatas("Default-path").c_str()));
+	m_recursiveLayout = new QHBoxLayout;
+	m_pathLabel = new QLabel(tr("Default Path :"));
+	m_pathEdit = new QLineEdit(((RenameMeMainWindow*)parentWidget())->getSettings().getDatas("Default-path").c_str());
 	m_pathButton = new QPushButton(tr("Browse"));
+	m_recursiveCheckBox = new QCheckBox("Use recursive directory");
 	m_pathLayout->addWidget(m_pathLabel);
 	m_pathLayout->addWidget(m_pathEdit);
 	m_pathLayout->addWidget(m_pathButton);
-	m_pathBox->setLayout(m_pathLayout);
+	m_recursiveLayout->addWidget(m_recursiveCheckBox);
+	m_openLayout->addLayout(m_pathLayout);
+	m_openLayout->addLayout(m_recursiveLayout);
+	m_pathBox->setLayout(m_openLayout);
 }

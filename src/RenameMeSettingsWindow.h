@@ -3,6 +3,7 @@
 
 #include <QtWidgets>
 #include "RenameMeSettings.h"
+#include "RenameMeMainWindow.h"
 
 class RenameMeSettingsWindow : public QDialog
 {
@@ -14,12 +15,14 @@ class RenameMeSettingsWindow : public QDialog
 	
 	private:
 		// Attributes
-		RenameMeSettings *m_settings;
 		QVBoxLayout *m_mainLayout;
+		QVBoxLayout *m_openLayout;
 		QGroupBox *m_pathBox;
 		QHBoxLayout *m_pathLayout;
+		QHBoxLayout *m_recursiveLayout;
 		QLabel *m_pathLabel;
 		QLineEdit *m_pathEdit;
+		QCheckBox *m_recursiveCheckBox;
 		QPushButton *m_pathButton;
 		// Methods
 		void createPathBox();

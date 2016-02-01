@@ -3,9 +3,10 @@
 RenameMeMainWindow::RenameMeMainWindow() : QMainWindow()
 {
 	std::vector<std::pair<boost::filesystem::path, time_t> > m_vec;	
-	  
+	m_settings = new RenameMeSettings("config.txt");
+	m_settings->readDatas();
+	 
 	this->resize(QSize(600,450));
-
   createMenu();
   m_table = new QTableWidget(0, 3, this);
   m_tabHeader << "Path" << "Date" << "";
@@ -32,7 +33,7 @@ RenameMeMainWindow::~RenameMeMainWindow()
 void RenameMeMainWindow::open()
 {
 	m_table->setRowCount(0);
-	m_currentDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), "/home", QFileDialog::ShowDirsOnly);
+	m_currentDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), m_settings->getDatas("Default-path").c_str(), QFileDialog::ShowDirsOnly);
 	if(m_currentDir != NULL)
 	{
 		m_runAct->setEnabled(true);
@@ -114,6 +115,11 @@ void RenameMeMainWindow::settings()
 }
 
 // METHODS
+RenameMeSettings RenameMeMainWindow::getSettings()
+{
+	return *m_settings;
+}
+
 void RenameMeMainWindow::createMenu()
 {
 	m_toolBar = addToolBar(tr("File"));
