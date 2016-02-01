@@ -22,12 +22,14 @@ set(${PROJECT_NAME}_CPP
 	src/RenameMeMainWindow.cpp
 	src/RenameMeSettingsWindow.cpp
 	src/RenameMePhotos.cpp
+	src/RenameMeSettings.cpp
 )
 
 set(${PROJECT_NAME}_H
 	src/RenameMeMainWindow.h
 	src/RenameMeSettingsWindow.h
 	src/RenameMePhotos.h
+	src/RenameMeSettings.h
 )
 
 add_executable(

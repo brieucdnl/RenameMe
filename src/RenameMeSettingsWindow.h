@@ -2,6 +2,7 @@
 #define DEF_RENAMEMESETTINGSWINDOW
 
 #include <QtWidgets>
+#include "RenameMeSettings.h"
 
 class RenameMeSettingsWindow : public QDialog
 {
@@ -13,6 +14,7 @@ class RenameMeSettingsWindow : public QDialog
 	
 	private:
 		// Attributes
+		RenameMeSettings *m_settings;
 		QVBoxLayout *m_mainLayout;
 		QGroupBox *m_pathBox;
 		QHBoxLayout *m_pathLayout;
