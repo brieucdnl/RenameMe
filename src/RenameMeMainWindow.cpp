@@ -4,7 +4,6 @@ RenameMeMainWindow::RenameMeMainWindow() : QMainWindow()
 {
 	std::vector<std::pair<boost::filesystem::path, time_t> > m_vec;	
 	m_settings = new RenameMeSettings("config.txt");
-	m_settings->readDatas();
 	 
 	this->resize(QSize(600,450));
   createMenu();
@@ -41,7 +40,8 @@ void RenameMeMainWindow::open()
 		m_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 		m_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
 		m_table->horizontalHeader()->setSectionResizeMode(2, QHeaderView::ResizeToContents);
-		RenameMePhotos::openDirectory(m_currentDir.toStdString(), m_vec, m_settings->strToBool(m_settings->getDatas("Recursive")), true);
+		m_settings->readDatas();
+		RenameMePhotos::openDirectory(m_currentDir.toStdString(), m_vec, m_settings->strToBool(m_settings->getDatas("Recursive")), m_settings->strToBool(m_settings->getDatas("Clear")));
 		loadTable();	
 	}
 }
@@ -111,6 +111,7 @@ void RenameMeMainWindow::update()
 
 void RenameMeMainWindow::settings()
 {
+	m_settings->readDatas();
 	RenameMeSettingsWindow settingsWindow(this);
 	settingsWindow.exec();
 }
