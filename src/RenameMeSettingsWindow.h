@@ -15,6 +15,7 @@ class RenameMeSettingsWindow : public QDialog
 		
 	private slots:
 		void openFileDialog();
+		void save();
 		
 	private:
 		// Attributes
@@ -27,8 +28,12 @@ class RenameMeSettingsWindow : public QDialog
 		QCheckBox *m_recursiveCheckBox;
 		QCheckBox *m_clearCheckBox;
 		QPushButton *m_pathButton;
+		QHBoxLayout *m_buttonLayout;
+		QPushButton *m_validButton;
+		QPushButton *m_resetButton;
 		// Methods
 		void createPathBox();
+		void createPushButtons();
 };
 
 #endif

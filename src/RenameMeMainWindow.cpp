@@ -117,9 +117,9 @@ void RenameMeMainWindow::settings()
 }
 
 // METHODS
-RenameMeSettings RenameMeMainWindow::getSettings()
+RenameMeSettings* RenameMeMainWindow::getSettings()
 {
-	return *m_settings;
+	return m_settings;
 }
 
 void RenameMeMainWindow::createMenu()

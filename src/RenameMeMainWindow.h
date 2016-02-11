@@ -13,7 +13,7 @@ class RenameMeMainWindow : public QMainWindow
 	public:
 		RenameMeMainWindow();
 		~RenameMeMainWindow();
-		RenameMeSettings getSettings();
+		RenameMeSettings* getSettings();
 
 	private slots:
 		void open();
