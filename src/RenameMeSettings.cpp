@@ -39,6 +39,11 @@ bool RenameMeSettings::readDatas()
 	}
 	else
 	{
+		m_mapSettings["Default-path"] = "/";
+		m_mapSettings["Recursive"] = "true";
+		m_mapSettings["Clear"] = "true";
+		m_mapSettings["Files-prefix"] = "Image";
+		m_mapSettings["Start-value"] = "1";
 		return false;
 	}
 }
@@ -51,7 +56,9 @@ void RenameMeSettings::writeDatas()
 	{	
 		file << "Default-path=" << m_mapSettings["Default-path"] << std::endl;
 		file << "Recursive=" << m_mapSettings["Recursive"] << std::endl;
-		file << "Clear=" << m_mapSettings["Clear"] << std::endl;	
+		file << "Clear=" << m_mapSettings["Clear"] << std::endl;
+		file << "Files-prefix=" << m_mapSettings["Files-prefix"] << std::endl;
+		file << "Start-value=" << m_mapSettings["Start-value"]	<< std::endl;
 	}
 	else
 	{

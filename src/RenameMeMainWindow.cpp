@@ -32,6 +32,7 @@ RenameMeMainWindow::~RenameMeMainWindow()
 // SLOTS
 void RenameMeMainWindow::open()
 {
+	m_settings->readDatas();
 	m_table->setRowCount(0);
 	m_currentDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), m_settings->getDatas("Default-path").c_str(), QFileDialog::ShowDirsOnly);
 	if(m_currentDir != NULL)
@@ -47,7 +48,8 @@ void RenameMeMainWindow::open()
 }
 
 void RenameMeMainWindow::run()
-{
+{	
+	m_settings->readDatas();
 	bool run = true;
 	// Pre-loading Datas
 	std::vector<std::pair<boost::filesystem::path, time_t> > vecTmp, vecNotChecked, vecError;
@@ -61,8 +63,7 @@ void RenameMeMainWindow::run()
 		{
 			vecNotChecked.push_back(m_vec[i]);
 		}
-	}
-	
+	}	
 	if(!vecNotChecked.empty())
 	{
 		if(RenameMePhotos::checkConflict(vecNotChecked, vecError, m_vec.size() - vecTmp.size(), "Image", 1))
@@ -80,31 +81,38 @@ void RenameMeMainWindow::run()
 	}
 	if(run)
 	{
-		std::stringstream ss;
-		ss << "<p align='center'>This action can't be undone. Are you sure, you want to rename " << vecTmp.size() << " files ?</p>";
-		// Display a warning message
-		int result = QMessageBox(QMessageBox::Warning, "Warning !", QString::fromStdString(ss.str()), QMessageBox::Yes | QMessageBox::No).exec();
-		if(result == QMessageBox::Yes)
+		if(vecTmp.size())
 		{
-			RenameMePhotos::sortAndRename(vecTmp, "Image", 1);		
-			m_runAct->setEnabled(false);
-			m_updateAct->setEnabled(true);	
-			// Display a success message
-			std::stringstream ss2;
-			ss2 << vecTmp.size() << " files renamed successfully !";
-			QMessageBox(QMessageBox::Information, "Success !", QString::fromStdString(ss2.str())).exec();
+			std::stringstream ss;
+			ss << "<p align='center'>This action can't be undone. Are you sure, you want to rename " << vecTmp.size() << " files ?</p>";
+			// Display a warning message
+			int result = QMessageBox(QMessageBox::Warning, "Warning !", QString::fromStdString(ss.str()), QMessageBox::Yes | QMessageBox::No).exec();
+			if(result == QMessageBox::Yes)
+			{
+				RenameMePhotos::sortAndRename(vecTmp, "Image", 1);		
+				m_runAct->setEnabled(false);
+				m_updateAct->setEnabled(true);	
+				// Display a success message
+				std::stringstream ss2;
+				ss2 << vecTmp.size() << " files renamed successfully !";
+				QMessageBox(QMessageBox::Information, "Success !", QString::fromStdString(ss2.str())).exec();
+			}
+			else if(result == QMessageBox::No)
+			{
+				// Display an abort message
+				QMessageBox(QMessageBox::Information, "Abort !", "The abort was successfully executed !").exec();
+			}
 		}
-		else if(result == QMessageBox::No)
+		else
 		{
-			// Display an abort message
-			QMessageBox(QMessageBox::Information, "Abort !", "The abort was successfully executed !").exec();
+			QMessageBox(QMessageBox::Warning, "Warning !", "There was no files to process").exec();
 		}
 	}
 }
 
 void RenameMeMainWindow::update()
 {
-	RenameMePhotos::openDirectory(m_currentDir.toStdString(), m_vec, true);
+	RenameMePhotos::openDirectory(m_currentDir.toStdString(), m_vec, m_settings->strToBool(m_settings->getDatas("Recursive")), true);
 	loadTable();
 	m_runAct->setEnabled(true);
 }
