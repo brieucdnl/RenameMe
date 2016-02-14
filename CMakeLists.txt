@@ -9,6 +9,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5Widgets REQUIRED)
+set(RESOURCE ${CMAKE_SOURCE_DIR}/src/images.qrc)
+qt5_add_resources(RESOURCE_ADDED ${RESOURCE})
 
 find_package(Exiv2 REQUIRED)
 find_package(Boost COMPONENTS system filesystem REQUIRED)
@@ -36,6 +38,7 @@ add_executable(
 	${PROJECT_NAME}
 	${${PROJECT_NAME}_CPP}
 	${${PROJECT_NAME}_H}
+	${RESOURCE_ADDED}
 )
 
 target_link_libraries(

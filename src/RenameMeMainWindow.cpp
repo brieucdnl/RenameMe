@@ -136,12 +136,12 @@ void RenameMeMainWindow::createMenu()
 	m_toolBar->setMovable(false);
 	m_toolBar->setFloatable(false);
 
-	m_openAct = new QAction(QIcon("../../images/open.png"), tr("&Open a directory"), this);
-	m_runAct = new QAction(QIcon("../../images/run.png"), tr("&Rename files"), this);
+	m_openAct = new QAction(QIcon(":/open.png"), tr("&Open a directory"), this);
+	m_runAct = new QAction(QIcon(":/run.png"), tr("&Rename files"), this);
 	m_runAct->setEnabled(false);
-	m_updateAct = new QAction(QIcon("../../images/update.png"), tr("&Update directory"), this);
+	m_updateAct = new QAction(QIcon(":/update.png"), tr("&Update directory"), this);
 	m_updateAct->setEnabled(false);
-	m_settingsAct = new QAction(QIcon("../../images/settings.png"), tr("&Change Settings"), this);
+	m_settingsAct = new QAction(QIcon(":/settings.png"), tr("&Change Settings"), this);
 
 	m_toolBar->addAction(m_openAct);
 	m_toolBar->addAction(m_runAct);
