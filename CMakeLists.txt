@@ -9,7 +9,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 set(CMAKE_AUTOMOC ON)
 
 find_package(Qt5Widgets REQUIRED)
-set(RESOURCE ${CMAKE_SOURCE_DIR}/src/images.qrc)
+set(RESOURCE ${CMAKE_SOURCE_DIR}/images.qrc)
 qt5_add_resources(RESOURCE_ADDED ${RESOURCE})
 
 find_package(Exiv2 REQUIRED)
