@@ -33,10 +33,10 @@ RenameMeMainWindow::~RenameMeMainWindow()
 void RenameMeMainWindow::open()
 {
 	m_settings->readDatas();
-	m_table->setRowCount(0);
 	m_currentDir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), m_settings->getDatas("Default-path").c_str(), QFileDialog::ShowDirsOnly);
 	if(m_currentDir != NULL)
 	{
+		m_table->setRowCount(0);
 		m_runAct->setEnabled(true);
 		m_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
 		m_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::ResizeToContents);
