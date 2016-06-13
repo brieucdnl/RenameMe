@@ -4,8 +4,8 @@ RenameMeSettingsWindow::RenameMeSettingsWindow(QWidget *parent) : QDialog(parent
 {
 	// Initializing datas
 	this->setMinimumWidth(500);
-	RenameMeMainWindow* parentWidget = (RenameMeMainWindow*)this->parentWidget();
-	parentWidget->getSettings()->readDatas();
+	m_parent = (RenameMeMainWindow*)parent;
+	m_parent->getSettings()->readDatas();
 	m_mainLayout = new QVBoxLayout;
 	// Creating GroupBoxes
 	createPathBox();
@@ -44,20 +44,18 @@ RenameMeSettingsWindow::~RenameMeSettingsWindow()
 
 void RenameMeSettingsWindow::openFileDialog()
 {
-	RenameMeMainWindow* parent = (RenameMeMainWindow*)this->parentWidget();
-	QString str = QFileDialog::getExistingDirectory(this, tr("Open Directory"),parent->getSettings()->getDatas("Default-path").c_str());
+	QString str = QFileDialog::getExistingDirectory(this, tr("Open Directory"),m_parent->getSettings()->getDatas("Default-path").c_str());
 	m_pathEdit->setText(str);
 }
 
 void RenameMeSettingsWindow::save()
 {
-	RenameMeMainWindow* parent = (RenameMeMainWindow*)this->parentWidget();
-	parent->getSettings()->setDatas("Default-path", m_pathEdit->text().toStdString());
-	parent->getSettings()->setDatas("Recursive", parent->getSettings()->boolToStr(m_recursiveCheckBox->isChecked()));
-	parent->getSettings()->setDatas("Clear", parent->getSettings()->boolToStr(m_clearCheckBox->isChecked()));
-	parent->getSettings()->setDatas("Files-prefix", m_nameEdit->text().toStdString());
-	parent->getSettings()->setDatas("Start-value", std::to_string(m_startCountSpin->value()));
-	parent->getSettings()->writeDatas();
+	m_parent->getSettings()->setDatas("Default-path", m_pathEdit->text().toStdString());
+	m_parent->getSettings()->setDatas("Recursive", m_parent->getSettings()->boolToStr(m_recursiveCheckBox->isChecked()));
+	m_parent->getSettings()->setDatas("Clear", m_parent->getSettings()->boolToStr(m_clearCheckBox->isChecked()));
+	m_parent->getSettings()->setDatas("Files-prefix", m_nameEdit->text().toStdString());
+	m_parent->getSettings()->setDatas("Start-value", std::to_string(m_startCountSpin->value()));
+	m_parent->getSettings()->writeDatas();
 	this->close();
 }
 
@@ -72,20 +70,19 @@ void RenameMeSettingsWindow::reset()
 
 void RenameMeSettingsWindow::createPathBox()
 {
-	RenameMeMainWindow* parent = (RenameMeMainWindow*)this->parentWidget();
 	m_pathBox = new QGroupBox(tr("Directory Settings"));
 	m_openLayout = new QVBoxLayout;
 	m_pathLayout = new QHBoxLayout;
 	m_pathLabel = new QLabel(tr("Default Path :"));
-	m_pathEdit = new QLineEdit(parent->getSettings()->getDatas("Default-path").c_str());
+	m_pathEdit = new QLineEdit(m_parent->getSettings()->getDatas("Default-path").c_str());
 	m_pathButton = new QPushButton(tr("Browse"));
 	m_recursiveCheckBox = new QCheckBox("Use recursive directory");
 	m_clearCheckBox = new QCheckBox("Clear directory's list when opening a new directory");
-	if(parent->getSettings()->strToBool(parent->getSettings()->getDatas("Recursive")))
+	if(m_parent->getSettings()->strToBool(m_parent->getSettings()->getDatas("Recursive")))
 	{
 		m_recursiveCheckBox->setCheckState(Qt::Checked);
 	}
-	if(parent->getSettings()->strToBool(parent->getSettings()->getDatas("Clear")))
+	if(m_parent->getSettings()->strToBool(m_parent->getSettings()->getDatas("Clear")))
 	{
 		m_clearCheckBox->setCheckState(Qt::Checked);
 	}
@@ -102,21 +99,20 @@ void RenameMeSettingsWindow::createPathBox()
 
 void RenameMeSettingsWindow::createProcessBox()
 {
-	RenameMeMainWindow* parent = (RenameMeMainWindow*)this->parentWidget();
 	m_processBox = new QGroupBox(tr("Process settings"));
 	m_processLayout = new QVBoxLayout;
 	m_nameLayout = new QHBoxLayout;
 	m_startCountLayout = new QHBoxLayout;
 	m_nameLabel = new QLabel(tr("Files' prefix :"));
-	m_nameEdit = new QLineEdit(parent->getSettings()->getDatas("Files-prefix").c_str());
+	m_nameEdit = new QLineEdit(m_parent->getSettings()->getDatas("Files-prefix").c_str());
 	m_startCountLabel = new QLabel(tr("Suffix start value :"));
 	// Creating the QSpinBox
 	m_startCountSpin = new QSpinBox;
 	m_startCountSpin->setRange(0, INT_MAX);
 	m_startCountSpin->setSingleStep(1);
-	if(parent->getSettings()->getDatas("Start-value") != "")
+	if(m_parent->getSettings()->getDatas("Start-value") != "")
 	{
-		m_startCountSpin->setValue(std::stoi(parent->getSettings()->getDatas("Start-value")));
+		m_startCountSpin->setValue(std::stoi(m_parent->getSettings()->getDatas("Start-value")));
 	}
 	else
 	{
