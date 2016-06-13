@@ -66,7 +66,7 @@ void RenameMeMainWindow::run()
 	}	
 	if(!vecNotChecked.empty())
 	{
-		if(RenameMePhotos::checkConflict(vecNotChecked, vecError, m_vec.size() - vecTmp.size(), "Image", 1))
+		if(RenameMePhotos::checkConflict(vecNotChecked, vecError, m_vec.size() - vecTmp.size(), m_settings->getDatas("Files-prefix"), std::stoi(m_settings->getDatas("Start-Value"))))
 		{
 			std::stringstream ss;
 			ss << vecError.size() << " files in conflict ! We can resolve these conflicts by adding conflicted files to the process, would you go for it ?";
@@ -89,7 +89,7 @@ void RenameMeMainWindow::run()
 			int result = QMessageBox(QMessageBox::Warning, "Warning !", QString::fromStdString(ss.str()), QMessageBox::Yes | QMessageBox::No).exec();
 			if(result == QMessageBox::Yes)
 			{
-				RenameMePhotos::sortAndRename(vecTmp, "Image", 1);		
+				RenameMePhotos::sortAndRename(vecTmp, m_settings->getDatas("Files-prefix"), std::stoi(m_settings->getDatas("Start-value")));		
 				m_runAct->setEnabled(false);
 				m_updateAct->setEnabled(true);	
 				// Display a success message
@@ -158,6 +158,7 @@ void RenameMeMainWindow::loadTable()
 {
 	int i = 0;
 	m_table->setRowCount(0); // Reinit NbRow in table
+	std::sort(m_vec.begin(), m_vec.end(), RenameMePhotos::compare);
 	for(std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator it(m_vec.begin()); it != m_vec.end(); it++)
 	{
 		m_table->setRowCount(m_table->rowCount() + 1);

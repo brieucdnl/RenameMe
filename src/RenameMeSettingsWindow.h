@@ -17,7 +17,8 @@ class RenameMeSettingsWindow : public QDialog
 	private slots:
 		void openFileDialog();
 		void save();
-		
+		void reset();
+
 	private:
 		// Attributes
 		// Main

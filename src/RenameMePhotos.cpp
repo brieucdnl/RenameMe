@@ -88,7 +88,6 @@ int RenameMePhotos::sortAndRename(std::vector<std::pair<boost::filesystem::path,
 		}
 		std::rename(s.c_str(), ss.str().c_str());	
 	}
-	std::sort(vec.begin(), vec.end(), compare);
 	for(std::vector<std::pair<boost::filesystem::path, time_t> >::const_iterator it(vec.begin()); it != vec.end(); it++)
 	{	
 		std::regex r("(.*\\/)*(.*)(\\..{3,4})");

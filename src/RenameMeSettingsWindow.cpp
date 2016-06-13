@@ -61,6 +61,15 @@ void RenameMeSettingsWindow::save()
 	this->close();
 }
 
+void RenameMeSettingsWindow::reset()
+{
+	m_pathEdit->setText("/");
+	m_recursiveCheckBox->setCheckState(Qt::Checked);
+	m_clearCheckBox->setCheckState(Qt::Checked);
+	m_nameEdit->setText("Image");
+	m_startCountSpin->setValue(1);
+}
+
 void RenameMeSettingsWindow::createPathBox()
 {
 	RenameMeMainWindow* parent = (RenameMeMainWindow*)this->parentWidget();
@@ -132,4 +141,5 @@ void RenameMeSettingsWindow::createPushButtons()
 	m_buttonLayout->addWidget(m_resetButton);
 
 	connect(m_validButton, SIGNAL(released()), this, SLOT(save()));
+	connect(m_resetButton, SIGNAL(released()), this, SLOT(reset()));
 }
